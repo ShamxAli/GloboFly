@@ -7,7 +7,8 @@ import com.smartherd.globofly.services.DestinationAPI
 import com.smartherd.globofly.R
 import com.smartherd.globofly.helpers.DestinationAdapter
 import com.smartherd.globofly.models.Destination
-import com.smartherd.globofly.services.Client
+import com.smartherd.globofly.services.RetrofitClient
+import com.smartherd.globofly.utils.showToast
 import kotlinx.android.synthetic.main.activity_destiny_list.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +41,7 @@ class DestinationListActivity : AppCompatActivity() {
         // To be replaced by retrofit code
         //destiny_recycler_view.adapter = DestinationAdapter(SampleData.DESTINATIONS)
 
-        val buildService = Client.buildService(DestinationAPI::class.java)
+        val buildService = RetrofitClient.buildService(DestinationAPI::class.java)
 
         val requestCall = buildService.getDestinationList()
 
@@ -81,7 +82,7 @@ class DestinationListActivity : AppCompatActivity() {
         // To be replaced by retrofit code
         //destiny_recycler_view.adapter = DestinationAdapter(SampleData.DESTINATIONS)
 
-        val destinationService = Client.buildService(DestinationAPI::class.java)
+        val destinationService = RetrofitClient.buildService(DestinationAPI::class.java)
 
         val requestCall = destinationService.getDestinationList()
 
@@ -90,8 +91,11 @@ class DestinationListActivity : AppCompatActivity() {
         // Call is interface which holds all the info about http request and http response
         // object is inner class which implements Callback which has two methods...
         // Call is really important class
+        // use execute instead of enqueue in case of main thread specially for splash screen
         requestCall.enqueue(object : Callback<List<Destination>> {
 
+
+            // Your STATUS CODE will decide if the http response is a success or failure
             override fun onResponse(
                 call: Call<List<Destination>>,
                 response: Response<List<Destination>>
@@ -99,12 +103,18 @@ class DestinationListActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val destinationList = response.body()!!
                     recyclerView.adapter = DestinationAdapter(destinationList)
+                } else {
+                    showToast("Response is not loaded")
                 }
             }
 
+
+            // does not depend on result code
+            // INVOKED in case of NETWORK ERROR and establishing connection with Server
+            // or ERROR creating http request or http response
             override fun onFailure(call: Call<List<Destination>>, t: Throwable) {
 
-
+                showToast("Some Error Occur")
             }
         })
     }

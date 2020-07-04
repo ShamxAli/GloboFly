@@ -11,5 +11,4 @@ interface DestinationAPI {
     @GET("destination")
     fun getDestinationList(): Call<List<Destination>>
 
-
 }
