@@ -21,9 +21,27 @@ object RetrofitClient {
     }
 
 
+    // 6.1 Custom Interceptors
+    private val headerInterceptor = object : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            var request = chain.request()
+            request = request.newBuilder()
+                // x for user defined
+                .addHeader("x-device-type", Build.DEVICE)
+                .addHeader("Accept-Language", Locale.getDefault().language)
+                .build()
+
+            val proceed = chain.proceed(request)
+            return proceed
+        }
+
+    }
+
+
     // Create OkHttp Client
     private val okHttp = OkHttpClient.Builder()
         .callTimeout(5, TimeUnit.SECONDS) // by default retrofit have 10 seconds
+        .addInterceptor(headerInterceptor)
         .addInterceptor(logger)
 
     // Create Retrofit Builder
