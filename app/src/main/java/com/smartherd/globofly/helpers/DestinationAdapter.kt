@@ -38,10 +38,12 @@ class DestinationAdapter(private val destinationList: List<Destination>) : Recyc
 		return destinationList.size
 	}
 
+
 	class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 		val txvDestination: TextView = itemView.findViewById(R.id.txv_destination)
 		var destination: Destination? = null
+
 
 		override fun toString(): String {
 			return """${super.toString()} '${txvDestination.text}'"""

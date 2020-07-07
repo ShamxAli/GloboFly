@@ -17,6 +17,7 @@ import retrofit2.Response
 
 class DestinationListActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_destiny_list)
@@ -36,48 +37,8 @@ class DestinationListActivity : AppCompatActivity() {
         loadDestinations()
     }
 
-    private fun loadDestinationsss() {
-
-        // To be replaced by retrofit code
-        //destiny_recycler_view.adapter = DestinationAdapter(SampleData.DESTINATIONS)
-
-        val buildService = RetrofitClient.buildService(DestinationAPI::class.java)
-
-        val requestCall = buildService.getDestinationList()
-
-
-        // enqueue performs async operations in background thread
-        // Call is interface which holds all the info about http request and http response
-        // object is inner class which implements Callback which has two methods...
-        // Call is really important class
-        requestCall.enqueue(object : Callback<List<Destination>> {
-
-            override fun onResponse(
-                call: Call<List<Destination>>,
-                response: Response<List<Destination>>
-            ) {
-                if (response.isSuccessful) {
-                    // response.body() will return the list of destinations
-                    val destinationList = response.body()!!
-
-                    val adapter = DestinationAdapter(destinationList)
-                    recyclerView.adapter = adapter // == recyclerView.setAdapter = adapter
-
-                }
-            }
-
-            override fun onFailure(call: Call<List<Destination>>, t: Throwable) {
-
-            }
-
-
-        })
-
-
-    }
 
     private fun loadDestinations() {
-
 
         // To be replaced by retrofit code
         //destiny_recycler_view.adapter = DestinationAdapter(SampleData.DESTINATIONS)
@@ -86,6 +47,20 @@ class DestinationListActivity : AppCompatActivity() {
 
         val requestCall = destinationService.getDestinationList()
 
+        /*6.3 Cancel the request*/
+        // requestCall.cancel()
+        // requestCall.isCanceled (if cancelled perform some action)
+
+        // Query
+        val requestCall1 =
+            destinationService.getCountry("Pakistan") // Query param (if send 'null' will retrieve all)
+
+        // Query map
+        val hashMap = HashMap<String, String>()
+        hashMap["country"] = "India"
+        hashMap["count"] = "1"
+        // req
+        // destinationService.getCountryOne(hashMap)
 
         // enqueue performs async operations in background thread
         // Call is interface which holds all the info about http request and http response
