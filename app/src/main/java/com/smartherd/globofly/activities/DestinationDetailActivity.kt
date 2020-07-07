@@ -73,12 +73,37 @@ class DestinationDetailActivity : AppCompatActivity() {
         })
 
 
-
     }
 
     private fun initUpdateButton(id: Int) {
 
         btn_update.setOnClickListener {
+
+            val city = et_city.text.toString()
+            val description = et_description.text.toString()
+            val country = et_country.text.toString()
+
+
+            val retrofitClient = RetrofitClient.buildService(DestinationAPI::class.java)
+            val requestCall = retrofitClient.updateDestination(id, city, description, country)
+
+            requestCall.enqueue(object : Callback<Destination> {
+
+                override fun onResponse(call: Call<Destination>, response: Response<Destination>) {
+                    if (response.isSuccessful) {
+                        val body = response.body() // use it or not
+                        showToast("Updated successfully")
+                    } else {
+                        showToast("Failed to update")
+                    }
+                }
+
+                override fun onFailure(call: Call<Destination>, t: Throwable) {
+                    showToast("Failed ! Might be server error")
+                }
+            })
+
+            finish() // Move back to DestinationListActivity
 
         }
     }
@@ -86,7 +111,6 @@ class DestinationDetailActivity : AppCompatActivity() {
     private fun initDeleteButton(id: Int) {
 
         btn_delete.setOnClickListener {
-
 
 
         }
