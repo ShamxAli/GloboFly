@@ -36,7 +36,7 @@ class DestinationCreateActivity : AppCompatActivity() {
 
             val retrofitClient = RetrofitClient.buildService(DestinationAPI::class.java)
             val requestCall = retrofitClient.addDestination(newDestination)
-            
+
 
             requestCall.enqueue(object : Callback<Destination> {
 

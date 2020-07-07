@@ -45,6 +45,35 @@ class DestinationDetailActivity : AppCompatActivity() {
 
         // To be replaced by retrofit code
 
+
+        val destinationApi = RetrofitClient.buildService(DestinationAPI::class.java)
+        val requestCall = destinationApi.getDestination(id)
+
+
+        requestCall.enqueue(object : Callback<Destination> {
+
+            override fun onResponse(call: Call<Destination>, response: Response<Destination>) {
+                if (response.isSuccessful) {
+                    val destination = response.body()
+                    destination?.let {
+                        et_city.setText(destination.city)
+                        et_description.setText(destination.description)
+                        et_country.setText(destination.country)
+                        collapsing_toolbar.title = destination.city
+                    }
+                } else {
+                    showToast("Failed to retrieve details")
+                }
+            }
+
+            override fun onFailure(call: Call<Destination>, t: Throwable) {
+                showToast("Failed server error")
+            }
+
+        })
+
+
+
     }
 
     private fun initUpdateButton(id: Int) {
