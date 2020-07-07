@@ -113,6 +113,26 @@ class DestinationDetailActivity : AppCompatActivity() {
         btn_delete.setOnClickListener {
 
 
+            val retrofitClient = RetrofitClient.buildService(DestinationAPI::class.java)
+            val requestCall = retrofitClient.deleteDestination(id)
+            requestCall.enqueue(object : Callback<Unit> {
+
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.isSuccessful) {
+                        showToast("Item deleted successfully")
+                        finish()
+                    } else {
+                        showToast("Item is not deleted")
+                    }
+                }
+
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
+                    showToast("Not deleted ! Might be an server error")
+                }
+
+            })
+
+
         }
     }
 
