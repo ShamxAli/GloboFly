@@ -34,6 +34,27 @@ class DestinationCreateActivity : AppCompatActivity() {
 
             // To be replaced by retrofit code
 
+            val retrofitClient = RetrofitClient.buildService(DestinationAPI::class.java)
+            val requestCall = retrofitClient.addDestination(newDestination)
+            
+
+            requestCall.enqueue(object : Callback<Destination> {
+
+                override fun onResponse(call: Call<Destination>, response: Response<Destination>) {
+                    if (response.isSuccessful) {
+                        val body = response.body() // use it or ignore it
+                        showToast("Created successfully")
+                        finish()
+                    } else {
+                        showToast("Problem while creating resource")
+                    }
+
+                }
+
+                override fun onFailure(call: Call<Destination>, t: Throwable) {
+                    showToast("Server Error")
+                }
+            })
 
 
         }
